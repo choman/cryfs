@@ -1,16 +1,22 @@
 #include <cpp-utils/process/subprocess.h>
 #include <gtest/gtest.h>
+#include <boost/filesystem.hpp>
 
 using cpputils::Subprocess;
 using cpputils::SubprocessError;
+using std::string;
+namespace bf = boost::filesystem;
 
 namespace {
 std::string exit_with_message_and_status(const char* message, int status) {
 #if defined(_MSC_VER)
-    constexpr const char* executable = "cpp-utils-test_exit_status.exe";
+    constexpr const char* executable = "./test/cpp-utils/cpp-utils-test_exit_status.exe";
 #else
     constexpr const char* executable = "./test/cpp-utils/cpp-utils-test_exit_status";
 #endif
+    if (!bf::exists(executable)) {
+        throw std::runtime_error(string() + executable + " not found. Please run the test executable while the current working directory is the root of the cmake build directory.");
+    }
 	return std::string(executable) + " \"" + message + "\" " + std::to_string(status);
 }
 }

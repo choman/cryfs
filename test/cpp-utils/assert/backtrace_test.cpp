@@ -2,17 +2,22 @@
 #include <csignal>
 #include "cpp-utils/assert/backtrace.h"
 #include "cpp-utils/process/subprocess.h"
+#include <boost/filesystem.hpp>
 
 using std::string;
 using testing::HasSubstr;
+namespace bf = boost::filesystem;
 
 namespace {
 	std::string call_process_exiting_with(const std::string& kind, const std::string& signal = "") {
 #if defined(_MSC_VER)
-		constexpr const char* executable = "cpp-utils-test_exit_signal.exe";
+		constexpr const char* executable = "./test/cpp-utils/cpp-utils-test_exit_signal.exe";
 #else
 		constexpr const char* executable = "./test/cpp-utils/cpp-utils-test_exit_signal";
 #endif
+		if (!bf::exists(executable)) {
+			throw std::runtime_error(string() + executable + " not found. Please run the test executable while the current working directory is the root of the cmake build directory.");
+		}
 		const std::string command = std::string(executable) + " \"" + kind + "\" \"" + signal + "\"  2>&1";
 		auto result = cpputils::Subprocess::call(command);
 		return result.output;
