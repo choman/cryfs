@@ -10,7 +10,7 @@ namespace bf = boost::filesystem;
 namespace {
 std::string exit_with_message_and_status(const char* message, int status) {
 #if defined(_MSC_VER)
-    constexpr const char* executable = "./test/cpp-utils/cpp-utils-test_exit_status.exe";
+    constexpr const char* executable = "test/cpp-utils/cpp-utils-test_exit_status.exe";
 #else
     constexpr const char* executable = "./test/cpp-utils/cpp-utils-test_exit_status";
 #endif

@@ -11,7 +11,7 @@ namespace bf = boost::filesystem;
 namespace {
 	std::string call_process_exiting_with(const std::string& kind, const std::string& signal = "") {
 #if defined(_MSC_VER)
-		constexpr const char* executable = "./test/cpp-utils/cpp-utils-test_exit_signal.exe";
+		constexpr const char* executable = "test/cpp-utils/cpp-utils-test_exit_signal.exe";
 #else
 		constexpr const char* executable = "./test/cpp-utils/cpp-utils-test_exit_signal";
 #endif
