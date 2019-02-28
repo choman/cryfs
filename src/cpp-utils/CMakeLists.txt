@@ -60,13 +60,13 @@ set(SOURCES
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
-
 if(NOT MSVC)
-  find_package(Backtrace REQUIRED)
-  target_include_directories(${PROJECT_NAME} PUBLIC ${Backtrace_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${Backtrace_LIBRARIES})
+    find_package(Libunwind REQUIRED)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${LIBUNWIND_INCLUDE_DIR})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBUNWIND_LIBRARIES})
+    target_compile_definitions(${PROJECT_NAME} PRIVATE ${LIBUNWIND_DEFINITIONS})
 else()
-  target_link_libraries(${PROJECT_NAME} PUBLIC DbgHelp)
+    target_link_libraries(${PROJECT_NAME} PUBLIC DbgHelp)
 endif()
 
 if (NOT MSVC)

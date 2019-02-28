@@ -25,11 +25,6 @@ TEST(BacktraceTest, ContainsBacktrace) {
 }
 
 #if !(defined(_MSC_VER) && defined(NDEBUG))
-TEST(BacktraceTest, ContainsExecutableName) {
-    string backtrace = cpputils::backtrace();
-    EXPECT_THAT(backtrace, HasSubstr("cpp-utils-test"));
-}
-
 TEST(BacktraceTest, ContainsTopLevelLine) {
     string backtrace = cpputils::backtrace();
     EXPECT_THAT(backtrace, HasSubstr("BacktraceTest"));
@@ -86,22 +81,22 @@ TEST(BacktraceTest, DoesntCrashOnCaughtException) {
 #if !(defined(_MSC_VER) && defined(NDEBUG))
 TEST(BacktraceTest, ShowBacktraceOnNullptrAccess) {
 	auto output = call_process_exiting_with_nullptr_violation();
-	EXPECT_THAT(output, HasSubstr("cpp-utils-test_exit_signal"));
+	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigsegv_handler(int)"));
 }
 
 TEST(BacktraceTest, ShowBacktraceOnSigSegv) {
 	auto output = call_process_exiting_with_sigsegv();
-	EXPECT_THAT(output, HasSubstr("cpp-utils-test_exit_signal"));
+	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigsegv_handler(int)"));
 }
 
 TEST(BacktraceTest, ShowBacktraceOnUnhandledException) {
 	auto output = call_process_exiting_with_exception("my_exception_message");
-	EXPECT_THAT(output, HasSubstr("cpp-utils-test_exit_signal"));
+	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigabrt_handler(int)"));
 }
 
 TEST(BacktraceTest, ShowBacktraceOnSigIll) {
 	auto output = call_process_exiting_with_sigill();
-	EXPECT_THAT(output, HasSubstr("cpp-utils-test_exit_signal"));
+	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigill_handler(int)"));
 }
 #else
 TEST(BacktraceTest, ShowBacktraceOnNullptrAccess) {
@@ -128,7 +123,7 @@ TEST(BacktraceTest, ShowBacktraceOnSigIll) {
 #if !defined(_MSC_VER)
 TEST(BacktraceTest, ShowBacktraceOnSigAbrt) {
 	auto output = call_process_exiting_with_sigabrt();
-	EXPECT_THAT(output, HasSubstr("cpp-utils-test_exit_signal"));
+	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigabrt_handler(int)"));
 }
 
 TEST(BacktraceTest, ShowBacktraceOnSigAbrt_ShowsCorrectSignalName) {
