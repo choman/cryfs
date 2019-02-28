@@ -60,7 +60,8 @@ set(SOURCES
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
-if(NOT MSVC)
+if(NOT MSVC AND NOT APPLE)
+    # note: We use the libunwind code on Apple, but we don't seem to need these lines to link against it.
     find_package(Libunwind REQUIRED)
     target_include_directories(${PROJECT_NAME} PRIVATE ${LIBUNWIND_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBUNWIND_LIBRARIES})

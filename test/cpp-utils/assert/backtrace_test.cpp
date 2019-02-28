@@ -81,7 +81,11 @@ TEST(BacktraceTest, DoesntCrashOnCaughtException) {
 #if !(defined(_MSC_VER) && defined(NDEBUG))
 TEST(BacktraceTest, ShowBacktraceOnNullptrAccess) {
 	auto output = call_process_exiting_with_nullptr_violation();
+#ifdef __APPLE__
+	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigill_handler(int)"));
+#else
 	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigsegv_handler(int)"));
+#endif
 }
 
 TEST(BacktraceTest, ShowBacktraceOnSigSegv) {
