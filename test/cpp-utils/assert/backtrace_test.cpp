@@ -81,8 +81,10 @@ TEST(BacktraceTest, DoesntCrashOnCaughtException) {
 #if !(defined(_MSC_VER) && defined(NDEBUG))
 TEST(BacktraceTest, ShowBacktraceOnNullptrAccess) {
 	auto output = call_process_exiting_with_nullptr_violation();
-#ifdef __APPLE__
+#if defined(__APPLE__)
 	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigill_handler(int)"));
+#elif defined(_MSC_VER)
+        EXPECT_THAT(output, HasSubstr("handle_exit_signal"));
 #else
 	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigsegv_handler(int)"));
 #endif
@@ -90,17 +92,29 @@ TEST(BacktraceTest, ShowBacktraceOnNullptrAccess) {
 
 TEST(BacktraceTest, ShowBacktraceOnSigSegv) {
 	auto output = call_process_exiting_with_sigsegv();
+#if defined(_MSC_VER)
+        EXPECT_THAT(output, HasSubstr("handle_exit_signal"));
+#else
 	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigsegv_handler(int)"));
+#endif
 }
 
 TEST(BacktraceTest, ShowBacktraceOnUnhandledException) {
 	auto output = call_process_exiting_with_exception("my_exception_message");
+#if defined(_MSC_VER)
+        EXPECT_THAT(output, HasSubstr("handle_exit_signal"));
+#else
 	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigabrt_handler(int)"));
+#endif
 }
 
 TEST(BacktraceTest, ShowBacktraceOnSigIll) {
 	auto output = call_process_exiting_with_sigill();
+#if defined(_MSC_VER)
+        EXPECT_THAT(output, HasSubstr("handle_exit_signal"));
+#else
 	EXPECT_THAT(output, HasSubstr("cpputils::(anonymous namespace)::sigill_handler(int)"));
+#endif
 }
 #else
 TEST(BacktraceTest, ShowBacktraceOnNullptrAccess) {
